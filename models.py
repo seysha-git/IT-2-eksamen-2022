@@ -6,6 +6,7 @@ import pygame as pg
 
 class SpilleObjekt:
     def __init__(self, xPosisjon:int, yPosisjon:int):
+        self.farge =  (0,0,0)
         self.x = xPosisjon
         self.y = yPosisjon
     def flytt(self, int1, int2):
@@ -13,7 +14,7 @@ class SpilleObjekt:
         self.y += int2 
     def plassering(self, int1, int2, vindu):
         rekt = pg.Rect(self.x, self.y, int1, int2)
-        pg.draw.rect(vindu, "grey", rekt)
+        pg.draw.rect(vindu, self.farge, rekt)
 
 class SpilleBrett:
     HØYDE_MARGIN = 120
@@ -31,6 +32,7 @@ class SpilleBrett:
 
 
 class Menneske(SpilleObjekt):
+   HØYDE,BREDDE = 60,40
    def __init__(self, x,y, fart):
        self.fart = fart
        self.poeng = 0
@@ -39,9 +41,7 @@ class Menneske(SpilleObjekt):
        self.vx = 0
        self.vy = 0
        super().__init__(x,y)
-   def plassering(self, int1, int2, vindu):
-       rekt = pg.Rect(self.x, self.y, int1, int2)
-       pg.draw.rect(vindu, "blue", rekt)
+       self.farge = MENNESKE_FARGE
    def beveg(self, fart, retning):
        self.vx = 0
        self.vy = 0
@@ -60,7 +60,26 @@ class Menneske(SpilleObjekt):
         
 
 class Spøkelse(SpilleObjekt):
-    ...
+    BREDDE, HØYDE = 30, 30
+    def __init__(self, xPosisjon, yPosisjon):
+        super().__init__(xPosisjon, yPosisjon)
+        self.fart = 2
+        self.vx = 2
+        self.vy = 2
+        self.farge = "green"
+    def plassering(self, int1, int2, vindu):
+       global rekt
+       self.rekt = pg.Rect(self.x, self.y, int1, int2)
+       pg.draw.ellipse(vindu, self.farge, self.rekt)
+    def endre_retning(self, v, h):
+        #if self.rekt.colliderect(v) or self.rekt.colliderect(h):
+           # self.vy *= -1
+            #self.vx *= -1
+        if self.y < 0 or self.y + self.HØYDE + self.fart > SKJERM_HØYDE:
+            self.vy *= -1
+        if self.x < 0 or self.x + self.BREDDE + self.fart > SKJERM_BREDDE:
+            self.vx *= -1
+        
 
 class Hindering(SpilleObjekt):
     ... 

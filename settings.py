@@ -5,7 +5,7 @@ pg.font.init()
 #Screen settings 
 SKJERM_HØYDE, SKJERM_BREDDE = 800,1300
 FRISONE_HØYDE, FRISONE_BREDDE = 200, 200
-MENNESKE_HØYDE,MENNESKE_BREDDE = 60,40
+
 STOLPE_BREDDE = 20
 pg.display.set_caption("Manic Mansion")
 
