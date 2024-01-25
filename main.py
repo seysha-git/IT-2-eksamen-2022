@@ -3,19 +3,30 @@ from settings import *
 from utils import *
 import sys
 
-def draw_window(main_board):
-    main_board.vindu.fill("black")
-    pg.draw.rect(main_board.vindu, FRISONE_FARGE, main_board.venstre_frisone)
-    pg.draw.rect(main_board.vindu, FRISONE_FARGE,main_board.høyre_frisone)
-    #pg.draw.rect(main_board.vindu, STOLPE_FARGE, main_board.stolpe)
+def tegn_viduet(spille_brett, menneske):
+    vindu = spille_brett.vindu
+    spille_brett.vindu.fill("black")
+    pg.draw.rect(vindu, FRISONE_FARGE, spille_brett.venstre_frisone)
+    pg.draw.rect(vindu, FRISONE_FARGE,spille_brett.høyre_frisone)
+    #pg.draw.rect(spille_brett.vindu, STOLPE_FARGE, main_board.stolpe)
+    menneske.plassering(MENNESKE_BREDDE, MENNESKE_HØYDE, vindu)
     pg.display.update()
 
-
+def mennesket_kontroll(mennesket, fart): 
+    keys = pg.key.get_pressed() 
+    if keys[pg.K_w]:
+        mennesket.beveg(fart, "opp")
+    if keys[pg.K_s]:
+        mennesket.beveg(fart, "ned")
+    if keys[pg.K_d]:
+        mennesket.beveg(fart, "høyre")
+    if keys[pg.K_a]:
+        mennesket.beveg(fart, "venstre")
 
 def main():
-    main_board = SpilleBrett(SKJERM_BREDDE, SKJERM_HØYDE)
-    
-
+    fart = 5
+    spille_brett = SpilleBrett(SKJERM_BREDDE, SKJERM_HØYDE)
+    menneske = Menneske(50, SKJERM_HØYDE//2-100, fart)
     run = True
     while run:
         clock.tick(FPS)
@@ -23,7 +34,8 @@ def main():
             if event.type == pg.QUIT:
                 run = False
                 sys.exit()
-        draw_window(main_board)
+        mennesket_kontroll(menneske, fart)
+        tegn_viduet(spille_brett, menneske)
 
 
 
