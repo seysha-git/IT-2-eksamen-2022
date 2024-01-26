@@ -9,6 +9,9 @@ FRISONE_HØYDE, FRISONE_BREDDE = 200, 200
 STOLPE_BREDDE = 20
 pg.display.set_caption("Manic Mansion")
 
+#vinduet
+WIN = pg.display.set_mode((SKJERM_BREDDE, SKJERM_HØYDE))
+
 #FOnts
 START_FONT = pg.font.SysFont("comicsans", 40)
 FINISHED_FONT = pg.font.SysFont("comicsans", 40)
