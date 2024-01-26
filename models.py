@@ -35,7 +35,7 @@ class Menneske(SpilleObjekt):
    HØYDE,BREDDE = 60,40
    def __init__(self, x,y):
        self.navn = "mennesket"
-       self.fart = 5
+       self.fart = 7
        self.poeng = 0
        self.bærerSau = False 
        self.vx = 0
@@ -74,13 +74,16 @@ class Menneske(SpilleObjekt):
 
 class Spøkelse(SpilleObjekt):
     BREDDE, HØYDE = 45,45
-    def __init__(self, xPosisjon, yPosisjon):
-        super().__init__(xPosisjon, yPosisjon)
+    def __init__(self, ret):
+        self.x = rd.randint(200, SKJERM_BREDDE-200)
+        self.y = rd.randint(0, SKJERM_HØYDE-50, )
+        super().__init__(self.x, self.y)
         self.navn = "spøkelse"
         self.fart = 4
         self.vx = 4
         self.vy = 4
         self.farge = SPØKELSE_FARGE
+        self.ret = ret
     def plassering(self, vindu):
        self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
        pg.draw.ellipse(vindu, self.farge, self.rekt)
@@ -99,7 +102,6 @@ class Spøkelse(SpilleObjekt):
             if self.y < SKJERM_HØYDE//2 - FRISONE_HØYDE // 2:
                 up_hit = True
                 print("oppe treff")
-        #print(self.y, v.y)
         if left_hit or right_hit:
             dir = rd.choice([-1, 1])
             self.vx *= -1
@@ -110,8 +112,6 @@ class Spøkelse(SpilleObjekt):
             dir = rd.choice([-1, 1])
             self.vy *= -1
 
-        
-
         if self.y < 0 or self.y + self.HØYDE + self.fart > SKJERM_HØYDE:
             self.vy *= -1
         if self.x < 0 or self.x + self.BREDDE + self.fart > SKJERM_BREDDE:
@@ -120,14 +120,18 @@ class Spøkelse(SpilleObjekt):
 
 class Hindering(SpilleObjekt):
     BREDDE, HØYDE = 60, 60
-    def __init__(self, x,y):
-        super().__init__(x,y)
+    def __init__(self):
+        self.x =  rd.randint(0, SKJERM_BREDDE - 50)
+        self.y = rd.randint(0, SKJERM_HØYDE-50)
+        super().__init__(self.x, self.y)
         self.navn = "hindering"
         self.farge = HINDER_FARGE
 
 class Sau(SpilleObjekt):
     BREDDE,HØYDE = 40, 20
-    def __init__(self, x,y):
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
         super().__init__(x,y)
         self.navn = "sau"
         self.farge = SAU_FARGE
