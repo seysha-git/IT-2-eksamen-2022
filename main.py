@@ -26,11 +26,10 @@ def mennesket_kontroll(mennesket, hinderinger):
             elif mennesket.x > hinder.x:
                 right_hit = True
                 left_hit = False
-                print("triggerd")
             if hinder.y > mennesket.y:
                 up_hit = True
                 down_hit = False
-            elif mennesket.x > hinder.x:
+            elif mennesket.y > hinder.y:
                 down_hit = True
                 up_hit = False
 
@@ -46,44 +45,48 @@ def mennesket_kontroll(mennesket, hinderinger):
 
 def spøkelse_kontroll(spøkelse, ret, frisone_v, frisone_h):
     spøkelse.endre_retning(frisone_v, frisone_h)
+    vx,vy = spøkelse.vx, spøkelse.vy
     if ret == "venstre":
-        x,y = spøkelse.x, spøkelse.y
-        spøkelse.flytt()
+        spøkelse.flytt(-vx, -vy)
     elif ret == "høyre":
-        spøkelse.flytt()
+        spøkelse.flytt(vx, vy)
     elif ret == "ned":
-        spøkelse.flytt()
+        spøkelse.flytt(vx,-vy)
     elif ret == "opp":
-        spøkelse.flytt()
+        spøkelse.flytt(-vx, vy)
         
         
     
 def main():
+
     start_spøkelse_retning = tilfeldig_retning()
     spille_brett = SpilleBrett(SKJERM_BREDDE, SKJERM_HØYDE)
     menneske = Menneske(50, SKJERM_HØYDE//2-100)
     hinderinger = []
-    spøkelse = Spøkelse(600,600) #rd.randint(0, SKJERM_BREDDE - 50), rd.randint(0, SKJERM_HØYDE-50))
+    spøkelse = Spøkelse(rd.randint(0, SKJERM_BREDDE - 50), rd.randint(0, SKJERM_HØYDE-50))
 
     spille_brett.legg_till_objekt(menneske)
     spille_brett.legg_till_objekt(spøkelse)
     while len(hinderinger) < 3:
+        if hinderinger:
+            for i in range(len(hinderinger)):
+                if hinderinger[i].rekt.colliderect(spille_brett.venstre_frisone) or hinderinger[i].rekt.colliderect(spille_brett.høyre_frisone):
+                    hinderinger.remove(hinderinger[i])
+                print("flyttet den")
         hinder = Hindering(rd.randint(0, SKJERM_BREDDE - 50), rd.randint(0, SKJERM_HØYDE-50))
         hinderinger.append(hinder)
         spille_brett.legg_till_objekt(hinder)
 
     
     run = True
-
     while run:
         clock.tick(FPS)
-        
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 run = False
                 sys.exit()
         mennesket_kontroll(menneske, hinderinger)
-        #spøkelse_kontroll(spøkelse, start_spøkelse_retning, spille_brett.venstre_frisone, spille_brett.høyre_frisone)
+        spøkelse_kontroll(spøkelse, start_spøkelse_retning, spille_brett.venstre_frisone, spille_brett.høyre_frisone)
         tegn_viduet(spille_brett)
 
 

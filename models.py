@@ -69,32 +69,41 @@ class Spøkelse(SpilleObjekt):
     BREDDE, HØYDE = 45,45
     def __init__(self, xPosisjon, yPosisjon):
         super().__init__(xPosisjon, yPosisjon)
-        self.fart = 2
-        self.vx = 1
-        self.vy = 1
+        self.fart = 4
+        self.vx = 4
+        self.vy = 4
         self.farge = SPØKELSE_FARGE
     def plassering(self, vindu):
        self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
        pg.draw.ellipse(vindu, self.farge, self.rekt)
     def endre_retning(self, v, h):
-        #3if self.rekt.colliderect(v) or self.rekt.colliderect(h):
-         #   if self.x + self.fart == FRISONE_BREDDE- 3:
-         #      self.vx *= -1
-          #     print("Høyre frisone vegg kollisjon")
-           ####3# self.vy *= -1
-        if (self.x >= 0 and self.x <= FRISONE_BREDDE) and (self.y > (SKJERM_HØYDE//2-165) and self.y < ((SKJERM_HØYDE//2-120)+FRISONE_HØYDE)):
-            print(self.x, self.y)
-            if self.y < SKJERM_HØYDE//2-FRISONE_HØYDE or self.y > SKJERM_HØYDE//1.5-FRISONE_HØYDE:
-                self.vy *= -1
-                print("top, bunn, venste")
-            else:
-                print("side venstre")
-                self.vx *= -1
-        if ((self.x > SKJERM_BREDDE-FRISONE_BREDDE) and (self.x < SKJERM_BREDDE)) and (self.y > (SKJERM_HØYDE//2-165) and self.y < ((SKJERM_HØYDE//2-120)+FRISONE_HØYDE)):
-            if self.x + self.vx == SKJERM_BREDDE - FRISONE_BREDDE -50:
-              self.vx *= -1
-            else:
-              self.vy *= -1
+        dir = rd.choice([-1, 1])
+        up_hit, down_hit, left_hit, right_hit = False, False, False,False
+        if self.rekt.colliderect(v) or self.rekt.colliderect(h):
+            if self.x < FRISONE_BREDDE:
+                left_hit = True
+                right_hit = False
+            if self.x < SKJERM_BREDDE - FRISONE_BREDDE:
+                right_hit = True
+                left_hit = False
+            if self.y > SKJERM_HØYDE//2:
+                down_hit = True
+                up_hit = False
+                print("Oppe treff")
+            if self.y < SKJERM_HØYDE//2:
+                up_hit = True
+                down_hit = False
+                print("nede treff")
+        #print(self.y, v.y)
+        print(up_hit, down_hit, left_hit, right_hit)
+        if left_hit or right_hit:
+            self.vx *= dir
+        if up_hit:
+            self.vy *= dir
+        if down_hit:
+            self.vy *= dir
+
+        
 
         if self.y < 0 or self.y + self.HØYDE + self.fart > SKJERM_HØYDE:
             self.vy *= -1
