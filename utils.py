@@ -8,13 +8,14 @@ def tilfeldig_retning():
     retninger = ["opp", "ned", "høyre", "venstre"]
     return rd.choice(retninger)
 
-def vinduet_design(vindu, høyre_frisone, venstre_frisone, stolpe):
+def vindu_elementer(vindu, høyre_frisone, venstre_frisone, stolpe):
     pg.draw.rect(vindu, FRISONE_FARGE, venstre_frisone)
     pg.draw.rect(vindu, FRISONE_FARGE,høyre_frisone)
     pg.draw.rect(vindu, STOLPE_FARGE, stolpe)
 
 
 def tegn_viduet(spille_brett):
+
     vindu = spille_brett.vindu
     objekter = spille_brett.objekter
     venstre_frisone = spille_brett.venstre_frisone
@@ -25,16 +26,25 @@ def tegn_viduet(spille_brett):
     spøkelser = list(filter(lambda obj: obj.navn == "spøkelse", objekter ))
     spille_brett.vindu.fill("black")
     
-    vinduet_design(vindu, høyre_frisone, venstre_frisone, stolpe)
+    vindu_elementer(vindu, høyre_frisone, venstre_frisone, stolpe)
     mennesket_kontroll(menneske, spille_brett, spøkelser)
     spøkelse_kontroll(spøkelser, venstre_frisone, høyre_frisone)
 
     for obj in objekter:
+        if obj.navn == "hindering":
+            hinder = obj
+            if hinder.rekt.colliderect(venstre_frisone) or hinder.rekt.colliderect(høyre_frisone):
+                print("kolliderte")
+                antall_hinderinger -= 1
+                objekter.fjern_objekt(hinder)
+        if obj.navn == "mennesket":
+            mennesket1 = obj 
+            if mennesket1.sjekk_kollisjon(høyre_frisone):
+                print("Høyre frisone kollisjon")
         obj.plassering(vindu)
 
         
     
-
     pg.display.update()
 
 
@@ -70,6 +80,8 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser):
     
     sauer = list(filter(lambda obj: obj.navn == "sau", spille_brett.objekter))
     for sau in sauer:
+        if mennesket.sjekk_kollisjon(sau.rekt) and mennesket.bærerSau:
+            sys.exit()
         if mennesket.sjekk_kollisjon(sau.rekt):
             spille_brett.fjern_objekt(sau)
             mennesket.bærer_sau()
@@ -85,6 +97,7 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser):
     for spøkelse in spøkelser:
         if mennesket.sjekk_kollisjon(spøkelse.rekt):
             sys.exit()
+    
     
 
    

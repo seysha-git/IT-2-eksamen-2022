@@ -90,7 +90,7 @@ class Menneske(SpilleObjekt):
    def bærer_sau(self):
        self.bærerSau = True
    def reduser_fart(self):
-       self.fart = 1.5
+       self.fart = 2.5
    def øk_poeng(self):
        self.poeng += 1
    def sjekk_kollisjon(self, andre_objekt):
@@ -143,10 +143,7 @@ class Spøkelse(SpilleObjekt):
         if left_hit or right_hit:
             dir = rd.choice([-1, 1])
             self.vx *= -1
-        if up_hit:
-            dir = rd.choice([-1, 1])
-            self.vy *= -1
-        if down_hit:
+        if up_hit or down_hit:
             dir = rd.choice([-1, 1])
             self.vy *= -1
 
