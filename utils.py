@@ -4,6 +4,13 @@ from models import SpilleBrett, SpilleObjekt, Menneske, Spøkelse, Hindering, Sa
 import pygame as pg
 import sys
 import random as rd
+
+def sjekk_innen_kollisjon(objs, ny_obj, bool):
+        for obj in objs:
+            if ny_obj.rekt.colliderect(obj.rekt):
+                bool = False
+        return bool 
+
 def tilfeldig_retning():
     retninger = ["opp", "ned", "høyre", "venstre"]
     return rd.choice(retninger)
@@ -32,15 +39,22 @@ def tegn_viduet(spille_brett):
 
     for obj in objekter:
         if obj.navn == "hindering":
+            ikke_kollidert = False 
             hinder = obj
+            hinderinger = list(filter(lambda obj: obj.navn == "hindering", spille_brett.objekter))
+            ikke_kollidert = sjekk_innen_kollisjon(hinderinger, hinder, ikke_kollidert)
             if hinder.rekt.colliderect(venstre_frisone) or hinder.rekt.colliderect(høyre_frisone):
-                print("kolliderte")
-                antall_hinderinger -= 1
-                objekter.fjern_objekt(hinder)
-        if obj.navn == "mennesket":
-            mennesket1 = obj 
-            if mennesket1.sjekk_kollisjon(høyre_frisone):
-                print("Høyre frisone kollisjon")
+                spille_brett.fjern_objekt(hinder)
+                #spille_brett.legg_till_objekt(Hindering())
+            #if ikke_kollidert:
+              #  spille_brett.fjern_objekt(hinder)
+                #spille_brett.legg_till_objekt(Hindering())
+            
+        if obj.navn == "sau":
+            ikke_kollidert = False
+            sau = obj
+            sauer = list(filter(lambda obj: obj.navn == "sau", spille_brett.objekter))
+            ikke_kollidert = sjekk_innen_kollisjon(sauer, sau, ikke_kollidert)
         obj.plassering(vindu)
 
         
