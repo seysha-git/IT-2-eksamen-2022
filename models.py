@@ -5,6 +5,17 @@ import pygame as pg
 
 
 class SpilleObjekt:
+    """
+    Tlpasset egenskaper:
+    self.navn: Lar meg identifisere objektene i SpilleBrettet
+    self.farge = En RGB-farge (Se settings) for objektene slik at de er visuelt forskjellig
+    self.rekt = Lar meg bruke figuren i andre metoder, f.eks sjekkKoollisjon i mennesketObjekt
+
+    Tilpasset metoder:
+    plassering(vindu): Fjerna x,y kordinat som parameter fordi allerede definert i konstruktør.
+                       La til vindu som parameter, nødvendig for tegning på skjermen
+    
+    """
     BREDDE,HØYDE = 30, 30
     def __init__(self, xPosisjon:int, yPosisjon:int):
         self.name = "objekt"
@@ -19,8 +30,20 @@ class SpilleObjekt:
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
         pg.draw.rect(vindu, self.farge, self.rekt)
 class SpilleBrett:
+    """
+    Klasse spillebrett
+    Tilpasset egenskaper:
+    self.vindu: Lager skjermen i spillebrettet
+    self.venstre_frsione, self.høyre_frisone: Lager begge frisonene i klassen
+    self.stolpe: Et skille i midten bare for design skyld
+
+
+
+    
+    
+    """
     HØYDE_MARGIN = 120
-    def __init__(self, bredde:int, høyde:int, farge="black"):
+    def __init__(self, bredde:int, høyde:int):
         self.vindu = pg.display.set_mode((bredde, høyde))
         self.venstre_frisone = pg.Rect(0, SKJERM_HØYDE//2-self.HØYDE_MARGIN, FRISONE_BREDDE, FRISONE_HØYDE)
         self.høyre_frisone = pg.Rect(bredde-FRISONE_BREDDE, SKJERM_HØYDE//2 - self.HØYDE_MARGIN, FRISONE_BREDDE, FRISONE_HØYDE)
@@ -32,6 +55,13 @@ class SpilleBrett:
     def fjern_objekt(self, objekt):
         self.objekter.remove(objekt)
 class Menneske(SpilleObjekt):
+   """
+   Tlpasset egenskaper:
+   self.vx, self.vy: Lar meg kontrollere farten i x og y retning
+   Tilpasset metoder:
+   sjekk_kollisjon(andreObjekt): Nødvendig med annet objekt for å sjekke kollisjon
+   
+   """
    HØYDE,BREDDE = 60,40
    def __init__(self, x,y):
        self.navn = "mennesket"
@@ -60,7 +90,7 @@ class Menneske(SpilleObjekt):
    def bærer_sau(self):
        self.bærerSau = True
    def reduser_fart(self):
-       self.fart = 3
+       self.fart = 1.5
    def øk_poeng(self):
        self.poeng += 1
    def sjekk_kollisjon(self, andre_objekt):
@@ -73,6 +103,14 @@ class Menneske(SpilleObjekt):
         
 
 class Spøkelse(SpilleObjekt):
+    """
+    Tilpasset egenskaper:
+    self.vx, self.vy: Lar meg kontrollere farten i x og y retning
+    self.ret = start_retningen som spøkelse beveger i
+
+    Tilpasset metoder:
+    endre_retning(): Trennger venstre, høyre frisone for å finne kolisjonen hvor den endrer retning
+    """
     BREDDE, HØYDE = 45,45
     def __init__(self, ret):
         self.x = rd.randint(200, SKJERM_BREDDE-200)
