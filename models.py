@@ -86,8 +86,6 @@ class Menneske(SpilleObjekt):
        if retning == "venstre":
          self.vx = -self.fart
        self.flytt(self.vx, self.vy)
-   def bærer_sau(self):
-       self.bærerSau = True
    def reduser_fart(self):
        self.fart = 5
    def øk_poeng(self):
@@ -112,7 +110,7 @@ class Spøkelse(SpilleObjekt):
     """
     BREDDE, HØYDE = 45,45
     def __init__(self, ret):
-        self.x = rd.randint(200, SKJERM_BREDDE-200)
+        self.x = rd.randint(200, SKJERM_BREDDE-FRISONE_BREDDE-100)
         self.y = rd.randint(0, SKJERM_HØYDE-50, )
         super().__init__(self.x, self.y)
         self.navn = "spøkelse"
