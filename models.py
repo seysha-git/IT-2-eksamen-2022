@@ -24,14 +24,13 @@ class SpilleObjekt:
         self.farge =  (0,0,0)
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
     def flytt(self, int1, int2):
-        self.x += int1
-        self.y += int2
+        self.x = int1
+        self.y = int2
     def plassering(self, vindu):
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
         pg.draw.rect(vindu, self.farge, self.rekt)
 class SpilleBrett:
     """
-    Klasse spillebrett
     Tilpasset egenskaper:
     self.vindu: Lager skjermen i spillebrettet
     self.venstre_frsione, self.høyre_frisone: Lager begge frisonene i klassen
@@ -90,7 +89,7 @@ class Menneske(SpilleObjekt):
    def bærer_sau(self):
        self.bærerSau = True
    def reduser_fart(self):
-       self.fart = 2.5
+       self.fart = 5
    def øk_poeng(self):
        self.poeng += 1
    def sjekk_kollisjon(self, andre_objekt):
@@ -136,10 +135,8 @@ class Spøkelse(SpilleObjekt):
                 left_hit = False
             if self.y > SKJERM_HØYDE//2 + FRISONE_HØYDE//4:
                 down_hit = True
-                print("Nede treff")
             if self.y < SKJERM_HØYDE//2 - FRISONE_HØYDE // 2:
                 up_hit = True
-                print("oppe treff")
         if left_hit or right_hit:
             dir = rd.choice([-1, 1])
             self.vx *= -1
@@ -177,7 +174,6 @@ class Sau(SpilleObjekt):
         
     def blir_løftet(self):
         self.blir_båret = True
-        print("bir bært")
         self.fjern_sau()
     def fjern_sau(self):
         ...

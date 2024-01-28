@@ -5,11 +5,15 @@ import pygame as pg
 import sys
 import random as rd
 
-def sjekk_innen_kollisjon(objs, ny_obj, bool):
-        for obj in objs:
-            if ny_obj.rekt.colliderect(obj.rekt):
-                bool = False
-        return bool 
+def sjekk_innen_kollisjon(obj, objs, bool):
+        bool = False
+        for i in range(len(objs)):
+            if obj == objs[i]:
+                for j in range(i+1, len(objs)):
+                    if obj.rekt.colliderect(objs[j].rekt):
+                        obj.farge = "black"
+                        bool = True
+        return bool
 
 def tilfeldig_retning():
     retninger = ["opp", "ned", "høyre", "venstre"]
@@ -21,8 +25,8 @@ def vindu_elementer(vindu, høyre_frisone, venstre_frisone, stolpe):
     pg.draw.rect(vindu, STOLPE_FARGE, stolpe)
 
 
-def tegn_viduet(spille_brett):
-
+def tegn_vinduet(spille_brett):
+    spille_brett.vindu.fill("black")
     vindu = spille_brett.vindu
     objekter = spille_brett.objekter
     venstre_frisone = spille_brett.venstre_frisone
@@ -31,36 +35,39 @@ def tegn_viduet(spille_brett):
 
     menneske = list(filter(lambda obj: obj.navn == "mennesket", objekter ))[0]
     spøkelser = list(filter(lambda obj: obj.navn == "spøkelse", objekter ))
-    spille_brett.vindu.fill("black")
     
+
     vindu_elementer(vindu, høyre_frisone, venstre_frisone, stolpe)
     mennesket_kontroll(menneske, spille_brett, spøkelser)
     spøkelse_kontroll(spøkelser, venstre_frisone, høyre_frisone)
 
     for obj in objekter:
         if obj.navn == "hindering":
-            ikke_kollidert = False 
             hinder = obj
-            hinderinger = list(filter(lambda obj: obj.navn == "hindering", spille_brett.objekter))
-            ikke_kollidert = sjekk_innen_kollisjon(hinderinger, hinder, ikke_kollidert)
+            hinderinger = list(filter(lambda obj: obj.navn == "hindering", objekter))
+
             if hinder.rekt.colliderect(venstre_frisone) or hinder.rekt.colliderect(høyre_frisone):
+                print("Hinder kolliderte med rektangel, men ble så flyttet")
                 spille_brett.fjern_objekt(hinder)
-                #spille_brett.legg_till_objekt(Hindering())
-            #if ikke_kollidert:
-              #  spille_brett.fjern_objekt(hinder)
-                #spille_brett.legg_till_objekt(Hindering())
-            
+                spille_brett.legg_till_objekt(Hindering())
+            if sjekk_innen_kollisjon(hinder, hinderinger, False):
+                spille_brett.fjern_objekt(obj)
+                spille_brett.legg_till_objekt(Hindering())
+
         if obj.navn == "sau":
-            ikke_kollidert = False
+            sauer = list(filter(lambda obj: obj.navn == "sau", objekter))
             sau = obj
-            sauer = list(filter(lambda obj: obj.navn == "sau", spille_brett.objekter))
-            ikke_kollidert = sjekk_innen_kollisjon(sauer, sau, ikke_kollidert)
+            if sjekk_innen_kollisjon(sau, sauer, False):
+                if sau.rekt.colliderect(venstre_frisone):
+                    spille_brett.fjern_objekt(sau)
+                    spille_brett.legg_till_objekt(Sau(rd.randint(0, FRISONE_BREDDE-100), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
+                if sau.rekt.colliderect(høyre_frisone):
+                    spille_brett.fjern_objekt(sau)
+                    spille_brett.legg_till_objekt(Sau(rd.randint(SKJERM_BREDDE-FRISONE_BREDDE, SKJERM_BREDDE-FRISONE_BREDDE//8), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
+                
+                                    
         obj.plassering(vindu)
-
-        
-    
     pg.display.update()
-
 
 
 def mennesket_kontroll(mennesket,spille_brett, spøkelser):
@@ -121,13 +128,13 @@ def spøkelse_kontroll(spøkelser, frisone_v, frisone_h):
         spøkelse.endre_retning(frisone_v, frisone_h)
         vx,vy = spøkelse.vx, spøkelse.vy
         if spøkelse.ret == "venstre":
-            spøkelse.flytt(-vx, -vy)
+            spøkelse.flytt(spøkelse.x-vx, spøkelse.y-vy)
         elif spøkelse.ret == "høyre":
-            spøkelse.flytt(vx, vy)
+            spøkelse.flytt(spøkelse.x+vx, spøkelse.y+vy)
         elif spøkelse.ret == "ned":
-            spøkelse.flytt(vx,-vy)
+            spøkelse.flytt(spøkelse.x+vx,spøkelse.y-vy)
         elif spøkelse.ret == "opp":
-            spøkelse.flytt(-vx, vy)
+            spøkelse.flytt(spøkelse.x-vx,spøkelse.y+vy)
         
 
 
