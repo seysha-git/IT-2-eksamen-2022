@@ -41,9 +41,9 @@ def tegn_vinduet(spille_brett):
     pg.display.update()
 
 
-def mennesket_kontroll(mennesket,spille_brett, spøkelser):
+def mennesket_kontroll(mennesket,spille_brett, spøkelser, sauer, hinderinger):
     up_hit, down_hit, left_hit, right_hit = False, False, False, False
-    hinderinger = hent_objekter(spille_brett.objekter, "hindering")
+    
 
     for hinder in hinderinger:
         if mennesket.rekt.colliderect(hinder.rekt):
@@ -70,7 +70,7 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser):
     if keys[pg.K_a] and not right_hit and mennesket.x > 0:
         mennesket.beveg("venstre")
     
-    sauer = hent_objekter(spille_brett.objekter, "sau")
+    
     for sau in sauer:
         if mennesket.sjekk_kollisjon(sau.rekt) and mennesket.bærerSau:
             sys.exit()
@@ -139,8 +139,10 @@ def main():
 
         menneske = hent_objekter(spille_brett.objekter, "mennesket")[0]
         spøkelser = hent_objekter(spille_brett.objekter, "spøkelse")
+        sauer = hent_objekter(spille_brett.objekter, "sau")
+        hinderinger = hent_objekter(spille_brett.objekter, "hindering")
 
-        mennesket_kontroll(menneske, spille_brett, spøkelser)
+        mennesket_kontroll(menneske, spille_brett, spøkelser, sauer, hinderinger)
         spøkelse_kontroll(spøkelser, spille_brett.venstre_frisone, spille_brett.høyre_frisone)
         tegn_vinduet(spille_brett)
         #

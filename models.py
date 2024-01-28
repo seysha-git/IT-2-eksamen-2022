@@ -86,6 +86,8 @@ class Menneske(SpilleObjekt):
        if retning == "venstre":
          self.vx = -self.fart
        self.flytt(self.vx, self.vy)
+   def bær_sau(self, Sau):
+       ...
    def reduser_fart(self):
        self.fart = 5
    def øk_poeng(self):
@@ -169,7 +171,6 @@ class Sau(SpilleObjekt):
     def plassering(self, vindu):
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
         pg.draw.rect(vindu, self.farge, self.rekt)
-        
     def blir_løftet(self):
         self.blir_båret = True
         self.fjern_sau()

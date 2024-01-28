@@ -1,5 +1,4 @@
 import pygame as pg
-pg.font.init()
 
 #Screen settings 
 SKJERM_HØYDE, SKJERM_BREDDE = 800,1300
@@ -7,14 +6,6 @@ FRISONE_HØYDE, FRISONE_BREDDE = 200, 200
 
 STOLPE_BREDDE = 10
 pg.display.set_caption("Manic Mansion")
-
-#vinduet
-WIN = pg.display.set_mode((SKJERM_BREDDE, SKJERM_HØYDE))
-
-#FOnts
-START_FONT = pg.font.SysFont("comicsans", 40)
-FINISHED_FONT = pg.font.SysFont("comicsans", 40)
-POINTS_FONT = pg.font.SysFont("comicsans", 40)
 
 #Other
 FPS = 60
