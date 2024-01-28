@@ -153,7 +153,7 @@ class Spøkelse(SpilleObjekt):
 class Hindering(SpilleObjekt):
     BREDDE, HØYDE = 60, 60
     def __init__(self):
-        self.x =  rd.randint(0, SKJERM_BREDDE - 50)
+        self.x = rd.randint(0, SKJERM_BREDDE - 50)
         self.y = rd.randint(0, SKJERM_HØYDE-50)
         super().__init__(self.x, self.y)
         self.navn = "hindering"

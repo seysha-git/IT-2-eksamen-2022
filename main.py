@@ -6,11 +6,10 @@ import random as rd
 
 def tegn_vinduet(spille_brett):
     spille_brett.vindu.fill("black")
-    vindu = spille_brett.vindu
 
-    pg.draw.rect(vindu, FRISONE_FARGE, spille_brett.venstre_frisone)
-    pg.draw.rect(vindu, FRISONE_FARGE,spille_brett.høyre_frisone)
-    pg.draw.rect(vindu, STOLPE_FARGE, spille_brett.stolpe)
+    pg.draw.rect(spille_brett.vindu, FRISONE_FARGE, spille_brett.venstre_frisone)
+    pg.draw.rect(spille_brett.vindu, FRISONE_FARGE,spille_brett.høyre_frisone)
+    pg.draw.rect(spille_brett.vindu, STOLPE_FARGE, spille_brett.stolpe)
 
 
     for obj in spille_brett.objekter:
@@ -21,6 +20,7 @@ def tegn_vinduet(spille_brett):
                 print("Hinder kolliderte med rektangel, men ble så flyttet")
                 spille_brett.fjern_objekt(hinder)
                 spille_brett.legg_till_objekt(Hindering())
+            spøkelser = hent_objekter(spille_brett.objekter, "spøkelse")
             if sjekk_innen_kollisjon(hinder, hinderinger, False):
                 spille_brett.fjern_objekt(obj)
                 spille_brett.legg_till_objekt(Hindering())
@@ -37,7 +37,7 @@ def tegn_vinduet(spille_brett):
                     spille_brett.legg_till_objekt(Sau(rd.randint(SKJERM_BREDDE-FRISONE_BREDDE, SKJERM_BREDDE-FRISONE_BREDDE//8), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
                 
                                     
-        obj.plassering(vindu)
+        obj.plassering(spille_brett.vindu)
     pg.display.update()
 
 
@@ -83,6 +83,7 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser, sauer, hinderinger):
     if mennesket.sjekk_kollisjon(spille_brett.venstre_frisone) and mennesket.bærerSau:
         mennesket.endre_fart(7) 
         mennesket.bær_sau(False)
+        mennesket.øk_poeng()
         spille_brett.legg_till_objekt(Sau(rd.randint(0, FRISONE_BREDDE-100), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
         spille_brett.legg_till_objekt(Sau(rd.randint(SKJERM_BREDDE-FRISONE_BREDDE, SKJERM_BREDDE-FRISONE_BREDDE//8), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
         spille_brett.legg_till_objekt(Spøkelse(tilfeldig_retning()))
@@ -123,7 +124,14 @@ def main():
     spille_brett.legg_till_objekt(spøkelse)
 
     while antall_start_hinderinger < 3:
-        ny_hinder = Hindering()
+        ikke_kollidert = False
+        while not ikke_kollidert:
+            print("går inn i løkken")
+            ny_hinder = Hindering()
+            ikke_kollidert = True
+            if ny_hinder.rekt.colliderect(spøkelse.rekt):
+                print("kolliderte")
+                ikke_kollidert = False
         spille_brett.legg_till_objekt(ny_hinder)
         antall_start_hinderinger += 1
     while antall_start_sauer < 3:

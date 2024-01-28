@@ -4,7 +4,7 @@ import sys
 from settings import *
 
 def avslutt_spill():
-     pg.time.delay(2000)
+     pg.time.delay(3000)
      sys.exit()
 
 def hent_objekter(objekter, navn):
