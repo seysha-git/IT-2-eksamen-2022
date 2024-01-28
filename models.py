@@ -61,7 +61,7 @@ class Menneske(SpilleObjekt):
    sjekk_kollisjon(andreObjekt): Nødvendig med annet objekt for å sjekke kollisjon
    
    """
-   HØYDE,BREDDE = 60,40
+   HØYDE,BREDDE = 50,30
    def __init__(self, x,y):
        self.navn = "mennesket"
        self.fart = 7
@@ -86,10 +86,10 @@ class Menneske(SpilleObjekt):
        if retning == "venstre":
          self.vx = -self.fart
        self.flytt(self.vx, self.vy)
-   def bær_sau(self, Sau):
-       ...
-   def reduser_fart(self):
-       self.fart = 5
+   def bær_sau(self, bool):
+       self.bærerSau = bool
+   def endre_fart(self, fart):
+       self.fart = fart
    def øk_poeng(self):
        self.poeng += 1
    def sjekk_kollisjon(self, andre_objekt):

@@ -75,17 +75,19 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser, sauer, hinderinger):
         if mennesket.sjekk_kollisjon(sau.rekt) and mennesket.bærerSau:
             sys.exit()
         if mennesket.sjekk_kollisjon(sau.rekt) and mennesket.sjekk_kollisjon(spille_brett.høyre_frisone):
+            mennesket.bær_sau(True)
+            mennesket.endre_fart(3.5)
             spille_brett.fjern_objekt(sau)
-            mennesket.bærerSau = True
-            mennesket.reduser_fart()
+            
 
     if mennesket.sjekk_kollisjon(spille_brett.venstre_frisone) and mennesket.bærerSau:
-        mennesket.fart = 5
+        mennesket.endre_fart(5)
+        mennesket.bær_sau(False)
         spille_brett.legg_till_objekt(Sau(rd.randint(0, FRISONE_BREDDE-100), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
         spille_brett.legg_till_objekt(Sau(rd.randint(SKJERM_BREDDE-FRISONE_BREDDE, SKJERM_BREDDE-FRISONE_BREDDE//8), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
         spille_brett.legg_till_objekt(Spøkelse(tilfeldig_retning()))
         spille_brett.legg_till_objekt(Hindering())
-        mennesket.bærerSau = False
+        
     
     for spøkelse in spøkelser:
         if mennesket.sjekk_kollisjon(spøkelse.rekt):
