@@ -1,32 +1,23 @@
 from settings import * 
 from utils import *
+from models import *
 import sys
 import random as rd
 
 def tegn_vinduet(spille_brett):
     spille_brett.vindu.fill("black")
     vindu = spille_brett.vindu
-    objekter = spille_brett.objekter
-    venstre_frisone = spille_brett.venstre_frisone
-    høyre_frisone = spille_brett.høyre_frisone
-    stolpe = spille_brett.stolpe
 
-    pg.draw.rect(vindu, FRISONE_FARGE, venstre_frisone)
-    pg.draw.rect(vindu, FRISONE_FARGE,høyre_frisone)
-    pg.draw.rect(vindu, STOLPE_FARGE, stolpe)
+    pg.draw.rect(vindu, FRISONE_FARGE, spille_brett.venstre_frisone)
+    pg.draw.rect(vindu, FRISONE_FARGE,spille_brett.høyre_frisone)
+    pg.draw.rect(vindu, STOLPE_FARGE, spille_brett.stolpe)
 
-    menneske = hent_objekter(objekter, "mennesket")[0]
-    spøkelser = hent_objekter(objekter, "spøkelse")
 
-    
-    mennesket_kontroll(menneske, spille_brett, spøkelser)
-    spøkelse_kontroll(spøkelser, venstre_frisone, høyre_frisone)
-
-    for obj in objekter:
+    for obj in spille_brett.objekter:
         if obj.navn == "hindering":
             hinder = obj
-            hinderinger = hent_objekter(objekter, "hindering")
-            if hinder.rekt.colliderect(venstre_frisone) or hinder.rekt.colliderect(høyre_frisone):
+            hinderinger = hent_objekter(spille_brett.objekter, "hindering")
+            if hinder.rekt.colliderect(spille_brett.venstre_frisone) or hinder.rekt.colliderect(spille_brett.høyre_frisone):
                 print("Hinder kolliderte med rektangel, men ble så flyttet")
                 spille_brett.fjern_objekt(hinder)
                 spille_brett.legg_till_objekt(Hindering())
@@ -35,13 +26,13 @@ def tegn_vinduet(spille_brett):
                 spille_brett.legg_till_objekt(Hindering())
 
         if obj.navn == "sau":
-            sauer = hent_objekter(objekter, "sau")
+            sauer = hent_objekter(spille_brett.objekter, "sau")
             sau = obj
             if sjekk_innen_kollisjon(sau, sauer, False):
-                if sau.rekt.colliderect(venstre_frisone):
+                if sau.rekt.colliderect(spille_brett.venstre_frisone):
                     spille_brett.fjern_objekt(sau)
                     spille_brett.legg_till_objekt(Sau(rd.randint(0, FRISONE_BREDDE-100), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
-                if sau.rekt.colliderect(høyre_frisone):
+                if sau.rekt.colliderect(spille_brett.høyre_frisone):
                     spille_brett.fjern_objekt(sau)
                     spille_brett.legg_till_objekt(Sau(rd.randint(SKJERM_BREDDE-FRISONE_BREDDE, SKJERM_BREDDE-FRISONE_BREDDE//8), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
                 
@@ -119,7 +110,6 @@ def spøkelse_kontroll(spøkelser, frisone_v, frisone_h):
 
 
 def main():
-
     antall_start_hinderinger = 0
     antall_start_sauer = 0
 
@@ -146,7 +136,12 @@ def main():
             if event.type == pg.QUIT:
                 run = False
                 sys.exit()
-        
+
+        menneske = hent_objekter(spille_brett.objekter, "mennesket")[0]
+        spøkelser = hent_objekter(spille_brett.objekter, "spøkelse")
+
+        mennesket_kontroll(menneske, spille_brett, spøkelser)
+        spøkelse_kontroll(spøkelser, spille_brett.venstre_frisone, spille_brett.høyre_frisone)
         tegn_vinduet(spille_brett)
         #
 if __name__ == "__main__":

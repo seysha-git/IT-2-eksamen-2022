@@ -1,5 +1,4 @@
 import pygame as pg
-import os
 pg.font.init()
 
 #Screen settings 

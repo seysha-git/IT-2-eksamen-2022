@@ -1,9 +1,5 @@
 import random as rd
 from settings import *
-from models import SpilleBrett, SpilleObjekt, Menneske, Spøkelse, Hindering, Sau
-import pygame as pg
-import sys
-import random as rd
 
 def hent_objekter(objekter, navn):
     return [obj for obj in objekter if obj.navn == navn]
