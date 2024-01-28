@@ -46,7 +46,7 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser, sauer, hinderinger):
     
 
     for hinder in hinderinger:
-        if mennesket.rekt.colliderect(hinder.rekt):
+        if mennesket.sjekk_kollisjon(hinder.rekt):
             if hinder.x > mennesket.x:
                 left_hit = True
                 right_hit = False
@@ -73,7 +73,7 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser, sauer, hinderinger):
     
     for sau in sauer:
         if mennesket.sjekk_kollisjon(sau.rekt) and mennesket.bærerSau:
-            sys.exit()
+            avslutt_spill()
         if mennesket.sjekk_kollisjon(sau.rekt) and mennesket.sjekk_kollisjon(spille_brett.høyre_frisone):
             mennesket.bær_sau(True)
             mennesket.endre_fart(3.5)
@@ -81,7 +81,7 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser, sauer, hinderinger):
             
 
     if mennesket.sjekk_kollisjon(spille_brett.venstre_frisone) and mennesket.bærerSau:
-        mennesket.endre_fart(5)
+        mennesket.endre_fart(7) 
         mennesket.bær_sau(False)
         spille_brett.legg_till_objekt(Sau(rd.randint(0, FRISONE_BREDDE-100), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
         spille_brett.legg_till_objekt(Sau(rd.randint(SKJERM_BREDDE-FRISONE_BREDDE, SKJERM_BREDDE-FRISONE_BREDDE//8), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
@@ -91,7 +91,7 @@ def mennesket_kontroll(mennesket,spille_brett, spøkelser, sauer, hinderinger):
     
     for spøkelse in spøkelser:
         if mennesket.sjekk_kollisjon(spøkelse.rekt):
-            sys.exit()
+            avslutt_spill()
 
 def spøkelse_kontroll(spøkelser, frisone_v, frisone_h):
     for spøkelse in spøkelser:
@@ -137,7 +137,7 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 run = False
-                sys.exit()
+                avslutt_spill()
 
         menneske = hent_objekter(spille_brett.objekter, "mennesket")[0]
         spøkelser = hent_objekter(spille_brett.objekter, "spøkelse")
@@ -147,6 +147,8 @@ def main():
         mennesket_kontroll(menneske, spille_brett, spøkelser, sauer, hinderinger)
         spøkelse_kontroll(spøkelser, spille_brett.venstre_frisone, spille_brett.høyre_frisone)
         tegn_vinduet(spille_brett)
+
+        print(menneske.fart)
         #
 if __name__ == "__main__":
     main()

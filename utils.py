@@ -1,5 +1,11 @@
 import random as rd
+import pygame as pg
+import sys
 from settings import *
+
+def avslutt_spill():
+     pg.time.delay(2000)
+     sys.exit()
 
 def hent_objekter(objekter, navn):
     return [obj for obj in objekter if obj.navn == navn]
