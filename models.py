@@ -63,9 +63,17 @@ class Menneske(SpilleObjekt):
        self.bærerSau = False 
        self.vx = 0
        self.vy = 0
-
        super().__init__(x,y)
+
+       self.bærtSsau = pg.Rect(self.x, self.y, 40,20)
        self.farge = MENNESKE_FARGE
+   def plassering(self, vindu):
+        self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
+        pg.draw.rect(vindu, self.farge, self.rekt)
+        self.bærtSsau = pg.Rect(self.x, self.y, 40,20)
+        if self.bærerSau:
+            pg.draw.rect(vindu, SAU_FARGE, self.bærtSsau)
+    
    def beveg(self, retning):
        self.vx = 0
        self.vy = 0
@@ -80,6 +88,7 @@ class Menneske(SpilleObjekt):
        self.flytt(self.vx, self.vy)
    def bær_sau(self, bool):
        self.bærerSau = bool
+           
    def endre_fart(self, fart):
        self.fart = fart
    def øk_poeng(self):
@@ -111,6 +120,9 @@ class Spøkelse(SpilleObjekt):
         self.vy = 4
         self.farge = SPØKELSE_FARGE
         self.ret = ret
+    def plassering(self, vindu):
+        self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
+        pg.draw.ellipse(vindu, self.farge, self.rekt)
     def endre_retning(self, v, h):
         up_hit, down_hit, left_hit, right_hit = False, False, False,False
         if self.rekt.colliderect(v) or self.rekt.colliderect(h):

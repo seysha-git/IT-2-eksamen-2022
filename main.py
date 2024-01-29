@@ -12,6 +12,7 @@ def tegn_vinduet(spille_brett, menneske):
     pg.draw.rect(spille_brett.vindu, STOLPE_FARGE, spille_brett.stolpe)
 
 
+
     if menneske.sjekk_kollisjon(spille_brett.venstre_frisone) and menneske.bærerSau:
         menneske.endre_fart(7) 
         menneske.bær_sau(False)
@@ -33,7 +34,7 @@ def tegn_vinduet(spille_brett, menneske):
                 spille_brett.fjern_objekt(obj)
                 spille_brett.legg_till_objekt(Hindering())
         if obj.navn == "spøkelse":
-            if menneske.sjekk_kollisjon(obj.rekt):
+            if menneske.sjekk_kollisjon(obj.rekt) or menneske.bærtSsau.colliderect(obj.rekt):
                 avslutt_spill()
         if obj.navn == "sau":
             sauer = hent_objekter(spille_brett.objekter, "sau")
