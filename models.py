@@ -7,13 +7,11 @@ import pygame as pg
 class SpilleObjekt:
     """
     Tlpasset egenskaper:
-    self.navn: Lar meg identifisere objektene i SpilleBrettet
-    self.farge = En RGB-farge (Se settings) for objektene slik at de er visuelt forskjellig
-    self.rekt = Lar meg bruke figuren i andre metoder, f.eks sjekkKoollisjon i mennesketObjekt
-
+    self.navn: Identifisere objektene i SpilleBrettet
+    self.farge = RGB-farge (Se settings) slik at de er visuelt forskjellig
+    self.rekt = Lar meg bruke figuren ved kollisjoner
     Tilpasset metoder:
-    plassering(vindu): Fjerna x,y kordinat som parameter fordi allerede definert i konstruktør.
-                       La til vindu som parameter, nødvendig for tegning på skjermen
+    plassering(vindu): Fjerna x,y kordinat, ikke nødvendig
     
     """
     BREDDE,HØYDE = 30, 30
@@ -24,22 +22,19 @@ class SpilleObjekt:
         self.farge =  (0,0,0)
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
     def flytt(self, int1, int2):
-        self.x = int1
-        self.y = int2
+        self.x += int1
+        self.y += int2
     def plassering(self, vindu):
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
         pg.draw.rect(vindu, self.farge, self.rekt)
+        
 class SpilleBrett:
     """
+    Lager en liten frisone både på venstre og høyre side av spillebrettet
     Tilpasset egenskaper:
-    self.vindu: Lager skjermen i spillebrettet
-    self.venstre_frsione, self.høyre_frisone: Lager begge frisonene i klassen
-    self.stolpe: Et skille i midten bare for design skyld
-
-
-
-    
-    
+        self.vindu: Lager skjermen i spillebrettet
+        self.venstre_frsione, self.høyre_frisone: Lager begge frisonene
+        self.stolpe: Et skille i midten bare for design skyld
     """
     HØYDE_MARGIN = 120
     def __init__(self, bredde:int, høyde:int):
@@ -56,10 +51,9 @@ class SpilleBrett:
 class Menneske(SpilleObjekt):
    """
    Tlpasset egenskaper:
-   self.vx, self.vy: Lar meg kontrollere farten i x og y retning
+   self.vx, self.vy: Kontrollere farten i x og y retning
    Tilpasset metoder:
-   sjekk_kollisjon(andreObjekt): Nødvendig med annet objekt for å sjekke kollisjon
-   
+    sjekk_kollisjon(andreObjekt): trenger  annet objekt for å sjekke kollisjon
    """
    HØYDE,BREDDE = 50,30
    def __init__(self, x,y):
@@ -69,11 +63,9 @@ class Menneske(SpilleObjekt):
        self.bærerSau = False 
        self.vx = 0
        self.vy = 0
+
        super().__init__(x,y)
        self.farge = MENNESKE_FARGE
-   def flytt(self, int1, int2):
-        self.x += int1
-        self.y += int2
    def beveg(self, retning):
        self.vx = 0
        self.vy = 0
@@ -104,11 +96,9 @@ class Menneske(SpilleObjekt):
 class Spøkelse(SpilleObjekt):
     """
     Tilpasset egenskaper:
-    self.vx, self.vy: Lar meg kontrollere farten i x og y retning
-    self.ret = start_retningen som spøkelse beveger i
-
+    self.ret = start_retningen som spøkelse beveger seg i. 
     Tilpasset metoder:
-    endre_retning(): Trennger venstre, høyre frisone for å finne kolisjonen hvor den endrer retning
+    endre_retning(): Trennger venstre, høyre frisone for å endre retning
     """
     BREDDE, HØYDE = 45,45
     def __init__(self, ret):
@@ -121,9 +111,6 @@ class Spøkelse(SpilleObjekt):
         self.vy = 4
         self.farge = SPØKELSE_FARGE
         self.ret = ret
-    def plassering(self, vindu):
-       self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
-       pg.draw.ellipse(vindu, self.farge, self.rekt)
     def endre_retning(self, v, h):
         up_hit, down_hit, left_hit, right_hit = False, False, False,False
         if self.rekt.colliderect(v) or self.rekt.colliderect(h):
@@ -138,12 +125,9 @@ class Spøkelse(SpilleObjekt):
             if self.y < SKJERM_HØYDE//2 - FRISONE_HØYDE // 2:
                 up_hit = True
         if left_hit or right_hit:
-            dir = rd.choice([-1, 1])
             self.vx *= -1
         if up_hit or down_hit:
-            dir = rd.choice([-1, 1])
             self.vy *= -1
-
         if self.y < 0 or self.y + self.HØYDE + self.fart > SKJERM_HØYDE:
             self.vy *= -1
         if self.x < 0 or self.x + self.BREDDE + self.fart > SKJERM_BREDDE:
@@ -167,15 +151,6 @@ class Sau(SpilleObjekt):
         super().__init__(x,y)
         self.navn = "sau"
         self.farge = SAU_FARGE
-        self.blir_båret = False
-    def plassering(self, vindu):
-        self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
-        pg.draw.rect(vindu, self.farge, self.rekt)
-    def blir_løftet(self):
-        self.blir_båret = True
-        self.fjern_sau()
-    def fjern_sau(self):
-        ...
         
         
     
