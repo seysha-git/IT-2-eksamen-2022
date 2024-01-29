@@ -4,6 +4,48 @@ from models import *
 import sys
 import random as rd
 
+
+
+def mennesket_kontroll(mennesket, hinderinger):
+    up_hit, down_hit, left_hit, right_hit = False, False, False, False
+
+    for hinder in hinderinger:
+        if mennesket.sjekk_kollisjon(hinder.rekt):
+            if hinder.x > mennesket.x:
+                left_hit, right_hit = True, False
+            if mennesket.x > hinder.x:
+                right_hit, left_hit = True, False
+            if hinder.y > mennesket.y:
+                up_hit, down_hit = True, False
+            if mennesket.y > hinder.y:
+                down_hit, up_hit = True, False
+
+    keys = pg.key.get_pressed() 
+    if keys[pg.K_w] and not down_hit and mennesket.y > 0:
+        mennesket.beveg("opp")
+    if keys[pg.K_s] and  not up_hit and mennesket.y + mennesket.fart + mennesket.HØYDE < SKJERM_HØYDE:
+        mennesket.beveg("ned")
+    if keys[pg.K_d] and not left_hit and mennesket.x + mennesket.BREDDE + mennesket.fart< SKJERM_BREDDE:
+        mennesket.beveg("høyre")
+    if keys[pg.K_a] and not right_hit and mennesket.x > 0:
+        mennesket.beveg("venstre")
+    
+
+    
+def spøkelse_kontroll(spøkelser, frisone_v, frisone_h):
+    for spøkelse in spøkelser:
+        spøkelse.endre_retning(frisone_v, frisone_h)
+        vx,vy = spøkelse.vx, spøkelse.vy
+        if spøkelse.ret == "venstre":
+            spøkelse.flytt(-vx, -vy)
+        elif spøkelse.ret == "høyre":
+            spøkelse.flytt(vx, vy)
+        elif spøkelse.ret == "ned":
+            spøkelse.flytt(vx,-vy)
+        elif spøkelse.ret == "opp":
+            spøkelse.flytt(-vx,vy)
+
+
 def tegn_vinduet(spille_brett, menneske):
     spille_brett.vindu.fill("black")
 
@@ -36,6 +78,7 @@ def tegn_vinduet(spille_brett, menneske):
         if obj.navn == "spøkelse":
             if menneske.sjekk_kollisjon(obj.rekt) or menneske.bærtSsau.colliderect(obj.rekt):
                 avslutt_spill()
+            
         if obj.navn == "sau":
             sauer = hent_objekter(spille_brett.objekter, "sau")
             if menneske.sjekk_kollisjon(obj.rekt) and menneske.bærerSau:
@@ -53,49 +96,9 @@ def tegn_vinduet(spille_brett, menneske):
                     spille_brett.legg_till_objekt(Sau(rd.randint(SKJERM_BREDDE-FRISONE_BREDDE, SKJERM_BREDDE-FRISONE_BREDDE//8), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50)))
                 
                                     
-        obj.plassering(spille_brett.vindu)
+        obj.tegn(spille_brett.vindu)
     pg.display.update()
-
-
-def mennesket_kontroll(mennesket, hinderinger):
-    up_hit, down_hit, left_hit, right_hit = False, False, False, False
-
-    for hinder in hinderinger:
-        if mennesket.sjekk_kollisjon(hinder.rekt):
-            if hinder.x > mennesket.x:
-                left_hit, right_hit = True, False
-            elif mennesket.x > hinder.x:
-                right_hit, left_hit = True, False
-            if hinder.y > mennesket.y:
-                up_hit, down_hit = True, False
-            elif mennesket.y > hinder.y:
-                down_hit, up_hit = True, False
-
-    keys = pg.key.get_pressed() 
-    if keys[pg.K_w] and not down_hit and mennesket.y > 0:
-        mennesket.beveg("opp")
-    if keys[pg.K_s] and  not up_hit and mennesket.y + mennesket.fart + mennesket.HØYDE < SKJERM_HØYDE:
-        mennesket.beveg("ned")
-    if keys[pg.K_d] and not left_hit and mennesket.x + mennesket.BREDDE + mennesket.fart< SKJERM_BREDDE:
-        mennesket.beveg("høyre")
-    if keys[pg.K_a] and not right_hit and mennesket.x > 0:
-        mennesket.beveg("venstre")
-    
-
-    
-def spøkelse_kontroll(spøkelser, frisone_v, frisone_h):
-    for spøkelse in spøkelser:
-        spøkelse.endre_retning(frisone_v, frisone_h)
-        vx,vy = spøkelse.vx, spøkelse.vy
-        if spøkelse.ret == "venstre":
-            spøkelse.flytt(-vx, -vy)
-        elif spøkelse.ret == "høyre":
-            spøkelse.flytt(vx, vy)
-        elif spøkelse.ret == "ned":
-            spøkelse.flytt(vx,-vy)
-        elif spøkelse.ret == "opp":
-            spøkelse.flytt(-vx,vy)
-        
+     
 
 def main():
     """
@@ -120,14 +123,17 @@ def main():
 
     while antall_start_hinderinger < 3:
         ikke_kollidert = False
+        ny_hinder = Hindering()
         #Ingen objekter skal være oppå hverandre.
         while not ikke_kollidert:
-            ny_hinder = Hindering()
             ikke_kollidert = True
             if ny_hinder.rekt.colliderect(spøkelse.rekt):
                 ikke_kollidert = False
+                
+                ny_hinder.plassering(rd.randint(0, SKJERM_BREDDE - 50), rd.randint(0, SKJERM_HØYDE-50))
         spille_brett.legg_till_objekt(ny_hinder)
         antall_start_hinderinger += 1
+
     while antall_start_sauer < 3:
         ny_sau = Sau(rd.randint(SKJERM_BREDDE-FRISONE_BREDDE, SKJERM_BREDDE-FRISONE_BREDDE//8), rd.randint(SKJERM_HØYDE//2 - 120, (SKJERM_HØYDE//2 - 120)+ FRISONE_HØYDE-50))    
         spille_brett.legg_till_objekt(ny_sau)
@@ -152,6 +158,7 @@ def main():
         #
 if __name__ == "__main__":
     main()
+
 
 
 

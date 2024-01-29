@@ -24,7 +24,10 @@ class SpilleObjekt:
     def flytt(self, int1, int2):
         self.x += int1
         self.y += int2
-    def plassering(self, vindu):
+    def plassering(self, int1, int2):
+        self.x = int1
+        self.y = int2 
+    def tegn(self, vindu):
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
         pg.draw.rect(vindu, self.farge, self.rekt)
         
@@ -65,12 +68,12 @@ class Menneske(SpilleObjekt):
        self.vy = 0
        super().__init__(x,y)
 
-       self.bærtSsau = pg.Rect(self.x, self.y, 40,20)
+       self.bærtSsau = pg.Rect(self.x-20, self.y, 40,20)
        self.farge = MENNESKE_FARGE
-   def plassering(self, vindu):
+   def tegn(self, vindu):
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
         pg.draw.rect(vindu, self.farge, self.rekt)
-        self.bærtSsau = pg.Rect(self.x, self.y, 40,20)
+        self.bærtSsau = pg.Rect(self.x-2, self.y, 40,20)
         if self.bærerSau:
             pg.draw.rect(vindu, SAU_FARGE, self.bærtSsau)
     
@@ -120,7 +123,7 @@ class Spøkelse(SpilleObjekt):
         self.vy = 4
         self.farge = SPØKELSE_FARGE
         self.ret = ret
-    def plassering(self, vindu):
+    def tegn(self, vindu):
         self.rekt = pg.Rect(self.x, self.y, self.BREDDE, self.HØYDE)
         pg.draw.ellipse(vindu, self.farge, self.rekt)
     def endre_retning(self, v, h):
