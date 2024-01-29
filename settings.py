@@ -1,16 +1,17 @@
 import pygame as pg
 
-#Screen settings 
+#Skjerm 
 SKJERM_HØYDE, SKJERM_BREDDE = 800,1300
 FRISONE_HØYDE, FRISONE_BREDDE = 200, 200
 
 STOLPE_BREDDE = 10
 pg.display.set_caption("Manic Mansion")
 
-#Other
+#Annet
 FPS = 60
 clock = pg.time.Clock()
-#colors
+
+#Farger
 MENNESKE_FARGE = (134, 166, 215)
 SAU_FARGE = (245, 240, 240)
 HINDER_FARGE = (236, 168, 36)
