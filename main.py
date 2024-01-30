@@ -67,12 +67,11 @@ def tegn_vinduet(spille_brett, menneske):
 
     for obj in spille_brett.objekter:
         if obj.navn == "hindering":
-            hinder = obj
             hinderinger = hent_objekter(spille_brett.objekter, "hindering")
-            if hinder.rekt.colliderect(spille_brett.venstre_frisone) or hinder.rekt.colliderect(spille_brett.høyre_frisone):
-                spille_brett.fjern_objekt(hinder)
+            if obj.rekt.colliderect(spille_brett.venstre_frisone) or obj.rekt.colliderect(spille_brett.høyre_frisone):
+                spille_brett.fjern_objekt(obj)
                 spille_brett.legg_till_objekt(Hindering())
-            if sjekk_innen_kollisjon(hinder, hinderinger, False):
+            if sjekk_innen_kollisjon(obj, hinderinger, False):
                 spille_brett.fjern_objekt(obj)
                 spille_brett.legg_till_objekt(Hindering())
         if obj.navn == "spøkelse":
